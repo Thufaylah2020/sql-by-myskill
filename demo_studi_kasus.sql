@@ -1,3 +1,6 @@
+-- PORTOFOLIO PROJECT: https://selaweb.my.canva.site/data-analyst-portofolio
+-- SOURCE DATASET KAGGLE: https://www.kaggle.com/datasets/ruchi798/data-science-job-salaries?resource=download
+
 -- membuat database data scientis job 
 create database ds;
 -- mengecek tabel yang di input
