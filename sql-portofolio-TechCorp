@@ -1,0 +1,89 @@
+-- portofolio link: https://selaweb.my.canva.site/sql-portofolio-techcorp
+-- dataset link: https://docs.google.com/document/d/1MYNs-7qkSsU3Wkx9joNt-FNnEJU4d3N6Vc9mCeTSRdk/edit?tab=t.0
+
+-- 1. Identifikasi 3 pelanggan teratas berdasarkan total nominal pesanan!
+select 
+c.first_name,
+c.last_name,
+sum(total_amount) as total_order_amount
+from Customers_tc as c
+join Orders as o on o.customer_id = c.customer_id
+group by c.customer_id
+order by total_order_amount desc
+limit 3
+;
+
+-- 2. Temukan rata-rata nominal pesanan untuk setiap pelanggan!
+select 
+first_name,
+last_name,
+AVG(total_amount) as avg_order_amount
+from customers_tc as c
+join Orders as o 
+on o.customer_id = c.customer_id
+group by c.customer_id;
+
+-- 3. Temukan semua karyawan yang telah menyelesaikan lebih dari 4 tiket support!
+select 
+e.first_name,
+e.last_name,
+count(s.ticket_id) as total_resolved_ticket
+from Employees as e
+join SupportTickets as s
+on e.employee_id = s.employee_id
+where s.status = 'resolved'
+group by e.employee_id
+having total_resolved_ticket>4;
+
+-- 4. Temukan semua produk yang belum pernah dipesan!
+select 
+Products.product_name
+from Products 
+left join OrderDetails as od
+on od.product_id = Products.product_id
+where od.product_id is null;
+
+-- 5. Hitung total pendapatan yang dihasilkan dari penjualan produk!
+select 
+sum(quantity * unit_price)
+from OrderDetails;
+
+-- 6. Temukan harga rata-rata produk untuk setiap kategori dan temukan kategori 
+-- dengan harga rata-rata lebih dari $500!
+select 
+category,
+avg(price) as avg_price
+from Products 
+group by category
+having avg_price > 500;
+
+-- with CTE 
+with cte_avg_price as (
+select 
+category, avg(price) as rerata
+from Products 
+group by category
+)
+select * from cte_avg_price  where rerata > 500;
+
+-- 7. Temukan pelanggan yang telah membuat setidaknya satu pesanan dengan total jumlah lebih dari $1000!
+select 
+o.customer_id,
+c.first_name,
+c.last_name,
+o.total_amount
+from Orders as o 
+join Customers_tc as c
+on c.customer_id = o.customer_id
+having total_amount > 1000;
+
+select * from Customers_tc
+where customer_id in 
+(select 
+customer_id
+from Orders 
+where total_amount > 1000
+);
+
+
+
